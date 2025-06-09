@@ -1,9 +1,5 @@
 package ir;
 
-import com.tngtech.archunit.core.importer.ClassFileImporter;
-// import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.Test;
 
 class ArchUnitTest {

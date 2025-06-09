@@ -26,4 +26,10 @@ This test ensures that the project uses the OpenCSV library for reading or writi
 
 ---
 
+## Test: All Controls Should Implement MatchingControl
+
+This test ensures that all concrete (non-abstract, non-interface) classes in the `ir.ramtung.tinyme.domain.service` package whose names end with `Control` implement the `MatchingControl` interface. This enforces a consistent contract for all control classes, ensuring they provide the required matching logic and behaviors defined by the `MatchingControl` interface. If any such class does not implement the interface, the test will fail, highlighting a violation of the architectural rule.
+
+---
+
 

@@ -3,6 +3,7 @@ package ir.ramtung.tinyme;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 // import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import org.junit.jupiter.api.Test;
 
 class ArchUnitTest {
@@ -53,6 +54,19 @@ class ArchUnitTest {
                 .anyMatch(dep -> dep.getTargetClass().getPackageName().startsWith("com.opencsv"))
             );
         assert usesOpenCsv : "Project does not use OpenCSV (no classes from 'com.opencsv' found in dependencies).";
+    }
+
+    @Test
+    void allControlsShouldImplementMatchingControl() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir.ramtung.tinyme.domain.service");
+        importedClasses.stream()
+            .filter(javaClass -> javaClass.getSimpleName().endsWith("Control"))
+            .filter(javaClass -> !javaClass.isInterface() && !javaClass.getModifiers().contains(JavaModifier.ABSTRACT))
+            .forEach(javaClass -> {
+                boolean implementsMatchingControl = javaClass.getAllRawInterfaces().stream()
+                    .anyMatch(i -> i.getFullName().equals("ir.ramtung.tinyme.domain.service.MatchingControl"));
+                assert implementsMatchingControl : javaClass.getName() + " does not implement MatchingControl interface.";
+            });
     }
 
 }
