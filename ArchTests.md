@@ -59,4 +59,10 @@ If any other class attempts to directly depend on `Broker`, the test will fail, 
 
 ---
 
+## Test: All Processors Should Extend CommandProcessor
+
+This test enforces that all concrete (non-abstract, non-interface) classes in the `ir.ramtung.tinyme.domain.service` package whose names end with `Processor` (except for `CommandProcessor` itself) must extend the `CommandProcessor` class. This ensures a consistent architectural pattern for processor classes, making sure they inherit shared logic and behavior defined in `CommandProcessor`. If any such class does not extend `CommandProcessor`, the test will fail, highlighting a violation of this architectural rule.
+
+---
+
 

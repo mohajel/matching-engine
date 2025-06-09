@@ -109,4 +109,18 @@ class ArchUnitTest {
             });
     }
 
+    @Test
+    void allProcessorsShouldExtendCommandProcessor() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir.ramtung.tinyme.domain.service");
+        importedClasses.stream()
+            .filter(javaClass -> javaClass.getSimpleName().endsWith("Processor"))
+            .filter(javaClass -> !javaClass.getSimpleName().equals("CommandProcessor"))
+            .filter(javaClass -> !javaClass.isInterface() && !javaClass.getModifiers().contains(JavaModifier.ABSTRACT))
+            .forEach(javaClass -> {
+                boolean extendsCommandProcessor = javaClass.getAllRawSuperclasses().stream()
+                    .anyMatch(superClass -> superClass.getFullName().equals("ir.ramtung.tinyme.domain.service.CommandProcessor"));
+                assert extendsCommandProcessor : javaClass.getName() + " does not extend CommandProcessor.";
+            });
+    }
+
 }
