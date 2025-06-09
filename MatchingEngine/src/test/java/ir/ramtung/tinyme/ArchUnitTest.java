@@ -69,4 +69,44 @@ class ArchUnitTest {
             });
     }
 
+    @Test
+    void allJmsInteractionsShouldUseLogger() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir");
+        importedClasses.stream()
+            .filter(javaClass -> javaClass.getAllFields().stream()
+                .anyMatch(field -> field.getRawType().getFullName().equals("org.springframework.jms.core.JmsTemplate")))
+            .filter(javaClass -> !javaClass.getName().toLowerCase().contains("test")) // Exclude test classes
+            .forEach(javaClass -> {
+                boolean hasLogger = javaClass.getAllFields().stream()
+                    .anyMatch(field -> field.getRawType().getFullName().equals("java.util.logging.Logger"));
+                assert hasLogger : javaClass.getName() + " interacts with JMS but does not declare a java.util.logging.Logger field.";
+            });
+    }
+
+    @Test
+    void onlyAllowedClassesShouldAccessBroker() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir.ramtung.tinyme");
+        var allowed = java.util.Set.of(
+            "ir.ramtung.tinyme.domain.entity.Order",
+            "ir.ramtung.tinyme.domain.entity.Order$OrderBuilder",
+            "ir.ramtung.tinyme.domain.entity.IcebergOrder",
+            "ir.ramtung.tinyme.repository.BrokerRepository",
+            "ir.ramtung.tinyme.repository.DataLoader",
+            "ir.ramtung.tinyme.domain.entity.Broker",
+            "ir.ramtung.tinyme.domain.entity.Broker$BrokerBuilder",
+            "ir.ramtung.tinyme.utils.FixtureDefaults",
+            "ir.ramtung.tinyme.domain.service.NewOrderProcessor",
+            // why should CreditControl access Broker?
+            "ir.ramtung.tinyme.domain.service.CreditControl"
+        );
+        importedClasses.stream()
+            .filter(javaClass -> javaClass.getDirectDependenciesFromSelf().stream()
+                .anyMatch(dep -> dep.getTargetClass().getFullName().equals("ir.ramtung.tinyme.domain.entity.Broker")))
+            .forEach(javaClass -> {
+                boolean isTest = javaClass.getName().contains("Test");
+                assert allowed.contains(javaClass.getFullName()) || isTest :
+                    javaClass.getFullName() + " is not allowed to access Broker class.";
+            });
+    }
+
 }

@@ -32,4 +32,31 @@ This test ensures that all concrete (non-abstract, non-interface) classes in the
 
 ---
 
+## Test: All JMS Interactions Should Use Logger
+
+This test enforces that all production (non-test) classes which interact with the message queue via `JmsTemplate` declare a `java.util.logging.Logger` field. This ensures that every message sent to or received from the queue can be logged, providing a detailed audit trail for monitoring, debugging, and troubleshooting. Test classes are excluded from this rule to avoid unnecessary constraints on test code. If a production class uses `JmsTemplate` but does not declare a Logger, the test will fail, highlighting a violation of the architectural logging requirement.
+
+---
+
+## Test: Only Allowed Classes Should Access Broker
+
+This test enforces strict architectural boundaries around the usage of the `Broker` class. It ensures that only a specific set of production classes are permitted to directly access (depend on) the `Broker` class. The allowed classes are:
+
+- `Order`
+- `Order$OrderBuilder`
+- `IcebergOrder`
+- `BrokerRepository`
+- `DataLoader`
+- `Broker`
+- `Broker$BrokerBuilder`
+- `FixtureDefaults` (is this used in production?)
+- `NewOrderProcessor`
+- `CreditControl` (with a note questioning its necessity)
+
+Additionally, any class whose name contains `Test` (i.e., test classes) is also permitted to access `Broker`.
+
+If any other class attempts to directly depend on `Broker`, the test will fail, highlighting a violation of the architectural rule. This helps maintain encapsulation and prevents unintended dependencies on the `Broker` entity throughout the codebase.
+
+---
+
 
