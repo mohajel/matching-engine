@@ -31,4 +31,17 @@ class ArchUnitTest {
                 || javaClass.getAnnotations().stream().anyMatch(a -> a.getType().getName().startsWith("org.springframework.boot")));
         assert usesSpringBoot : "Project does not use Spring Boot (no classes or annotations from 'org.springframework.boot' found).";
     }
+
+    @Test
+    void projectShouldUseJmsForMessaging() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir");
+        boolean usesJms = importedClasses.stream()
+            .anyMatch(javaClass -> javaClass.getPackageName().startsWith("javax.jms")
+                || javaClass.getPackageName().startsWith("jakarta.jms")
+                || javaClass.getPackageName().startsWith("org.springframework.jms")
+                || javaClass.getAnnotations().stream().anyMatch(a -> a.getType().getName().startsWith("javax.jms")
+                    || a.getType().getName().startsWith("jakarta.jms")
+                    || a.getType().getName().startsWith("org.springframework.jms")));
+        assert usesJms : "Project does not use JMS for messaging (no classes or annotations from 'javax.jms', 'jakarta.jms', or 'org.springframework.jms' found).";
+    }
 }
