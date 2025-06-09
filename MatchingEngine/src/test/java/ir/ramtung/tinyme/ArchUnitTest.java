@@ -44,4 +44,15 @@ class ArchUnitTest {
                     || a.getType().getName().startsWith("org.springframework.jms")));
         assert usesJms : "Project does not use JMS for messaging (no classes or annotations from 'javax.jms', 'jakarta.jms', or 'org.springframework.jms' found).";
     }
+
+    @Test
+    void projectShouldUseOpenCsvForCsvFiles() {
+        JavaClasses importedClasses = new ClassFileImporter().importPackages("ir");
+        boolean usesOpenCsv = importedClasses.stream()
+            .anyMatch(javaClass -> javaClass.getDirectDependenciesFromSelf().stream()
+                .anyMatch(dep -> dep.getTargetClass().getPackageName().startsWith("com.opencsv"))
+            );
+        assert usesOpenCsv : "Project does not use OpenCSV (no classes from 'com.opencsv' found in dependencies).";
+    }
+
 }

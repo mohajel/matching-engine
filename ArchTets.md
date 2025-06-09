@@ -20,4 +20,10 @@ This test ensures that the project uses JMS for messaging. It checks for the pre
 
 ---
 
+## Test: Project Should Use OpenCSV for CSV Files
+
+This test ensures that the project uses the OpenCSV library for reading or writing CSV files. It checks for dependencies on classes from the `com.opencsv` package, which is a popular library for handling CSV operations in Java. If no such dependency is found, the test fails, indicating that the project does not use OpenCSV for CSV file processing.
+
+---
+
 
