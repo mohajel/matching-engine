@@ -14,4 +14,10 @@ This test checks that the project uses Spring Boot. It scans the imported classe
 
 ---
 
+## Test: Project Should Use JMS for Messaging
+
+This test ensures that the project uses JMS for messaging. It checks for the presence of classes or annotations from the `javax.jms`, `jakarta.jms`, or `org.springframework.jms` packages. If none are found, the test fails, indicating that JMS is not being used for messaging in the project.
+
+---
+
 
