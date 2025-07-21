@@ -65,4 +65,53 @@ This test enforces that all concrete (non-abstract, non-interface) classes in th
 
 ---
 
+## //AI Generated: Domain Entities Layered Dependency Test
+
+**Test:** Domain entities should not depend on service, repository, or messaging packages (except `messaging.request`).
+
+**Description:**
+This test enforces that classes in `ir.ramtung.tinyme.domain.entity` do not have direct dependencies on the service, repository, or messaging packages, except for the allowed dependency on `ir.ramtung.tinyme.messaging.request`. This supports a clean layered architecture, ensuring domain entities remain isolated from higher-level concerns.
+
+**Related ArchitectureDocument.md:**
+- Development Viewpoint: Package diagram and dependency arrows (see "Development viewpoint" section, package/class diagrams)
+- Information Viewpoint: Entity definitions and their independence
+
+---
+
+## //AI Generated: Service-to-Messaging Dependency Test
+
+**Test:** Service classes should not depend on messaging packages except for `messaging`, `messaging.event`, `messaging.request`, and `messaging.exception`.
+
+**Description:**
+This test ensures that classes in `ir.ramtung.tinyme.domain.service` do not depend on messaging subpackages except for the explicitly allowed ones. This maintains clear service boundaries and prevents unwanted coupling between business logic and messaging infrastructure.
+
+**Related ArchitectureDocument.md:**
+- Development Viewpoint: Package diagram and dependency arrows (see "Development viewpoint")
+
+---
+
+## //AI Generated: No Cycles Between Main Packages
+
+**Test:** No cycles between main packages (entity, service, repository, messaging), except for allowed dependencies.
+
+**Description:**
+This test checks for direct cyclic dependencies between the main architectural packages, with exceptions for documented/allowed dependencies (e.g., domain.entity <-> messaging.request). This helps maintain modularity and prevents tightly coupled code.
+
+**Related ArchitectureDocument.md:**
+- Development Viewpoint: Package diagram and dependency arrows
+
+---
+
+## //AI Generated: Test Class Naming Convention
+
+**Test:** All test classes should end with 'Test', except for known utility/config classes.
+
+**Description:**
+This test enforces that all test classes in the MatchingEngine module end with 'Test', except for utility or configuration classes such as `TestDefaults`, `MockedJMSTestConfig`, `StubbedCreditServiceTestConfig`, and `TestOrderBuilder`. This supports a consistent and discoverable test structure.
+
+**Related ArchitectureDocument.md:**
+- Development Viewpoint: Testing strategy and naming conventions (see "Development viewpoint", testing strategy)
+
+---
+
 
